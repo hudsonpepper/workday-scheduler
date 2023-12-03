@@ -5,7 +5,7 @@
 
 $(function () {
   // Logs Time and Date at the top of the page
-  let currentTime = dayjs().format('MM/DD/YYYY HH:mm');
+  let currentTime = dayjs().format('MM/DD/YYYY [@] HH:mm');
   $("#currentDay").text(currentTime);
 
   // Deals with Local Storage Initialization
@@ -33,7 +33,7 @@ $(function () {
     console.log("Hour Number Clicked", hourNum);
     let currHour = Number(dayjs().format('H'));
     console.log("Hour of the day", currHour);
-    if(hourNum > currHour) {
+    if (hourNum > currHour) {
       console.log("Future");
     }
     else if (hourNum == currHour) {
@@ -50,29 +50,35 @@ $(function () {
     localStorage.setItem("eventHistory", JSON.stringify(eventHistory));
   });
 
-
+  // Logs Local History Events to relevant text boxes
   function logEvents(eventHistory) {
     for (let i = 0; i < $(".description").length; i++) {
       $($(".description")[i]).val(eventHistory[i]);
     }
   }
+  // Colors According to Current Time and Time on Section
+  function colorEvents() {
+    let textBoxes = $(".description");
+    let currHour = Number(dayjs().format('H'));
+    for (let i = 0; i < textBoxes.length; i++) {
+      let hourNum = $(textBoxes[i]).parent().data("number");
+      if (hourNum > currHour) {
+        // Future Condition
+        $(textBoxes[i]).addClass('future');
+        $(textBoxes[i]).removeClass('past present');
+      }
+      else if (hourNum == currHour) {
+        // Present Condition
+        $(textBoxes[i]).addClass('present');
+        $(textBoxes[i]).removeClass('past future');
+      }
+      else {
+        // Past Condition
+        $(textBoxes[i]).addClass('past');
+        $(textBoxes[i]).removeClass('present future');
+      }
+    }
+  }
+  colorEvents();
   logEvents(eventHistory);
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
-  // TODO: Add code to display the current date in the header of the page.
 });
