@@ -1,7 +1,27 @@
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
-$(function () {
+// localStorage.clear();
+var eventHistory = localStorage.getItem("eventHistory");
+if(eventHistory === null) {
+  eventHistory = [,,,,,,,,];
+  localStorage.setItem("eventHistory", JSON.stringify(eventHistory));
+}
+else {
+  eventHistory = JSON.parse(eventHistory);
+}
+console.log(eventHistory);
+$(".saveBtn").on("click", function () {
+  console.log("click");
+  // Logs Hour Number
+  let hourNum = $(this).parent().data("number")
+  console.log(hourNum);
+  // Logs text content
+  console.log($(this).parent().children().eq(1).val())
+});
+
+$(function() {
+  console.log("no click");
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
