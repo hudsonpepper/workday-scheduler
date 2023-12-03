@@ -26,7 +26,7 @@ Please use this site to help you track events throughout your day.
 The site can be accessed here: https://hudsonpepper.github.io/workday-scheduler/
 
 Example Screenshot of Deployed Site:
-![Screenshot of ](./assets/images/Screenshot_Event-Scheduler.png "Screenshot")
+![Screenshot of Event Scheduler](./Assets/images/Screenshot_Event-Scheduler.png "Screenshot")
 
 
 ## Credits
