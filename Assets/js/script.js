@@ -8,7 +8,7 @@ $(function () {
   let currentTime = dayjs().format('MM/DD/YYYY [@] HH:mm');
   $("#currentDay").text(currentTime);
 
-  // Deals with Local Storage Initialization
+  // Deals with Local Storage Initialization/Retrieval
   var eventHistory = localStorage.getItem("eventHistory");
   if (eventHistory === null) {
     eventHistory = [, , , , , , , ,];
@@ -17,45 +17,13 @@ $(function () {
   else {
     eventHistory = JSON.parse(eventHistory);
   }
-
-  // Event Listener: Clear Calendar Button
-  $("#clearCal").on("click", function () {
-    eventHistory = [, , , , , , , ,];
-    localStorage.setItem("eventHistory", JSON.stringify(eventHistory));
-    logEvents(eventHistory);
-  })
-
-  // Event Listener: 
-  $(".saveBtn").on("click", function () {
-    console.log("click");
-    // Logs Hour Number
-    let hourNum = $(this).parent().data("number")
-    console.log("Hour Number Clicked", hourNum);
-    let currHour = Number(dayjs().format('H'));
-    console.log("Hour of the day", currHour);
-    if (hourNum > currHour) {
-      console.log("Future");
-    }
-    else if (hourNum == currHour) {
-      console.log("Present");
-    }
-    else {
-      console.log("Past")
-    }
-    // Logs text content
-    let textContent = $(this).parent().children().eq(1).val()
-    console.log(textContent);
-    eventHistory[hourNum - 9] = textContent;
-    console.log(eventHistory)
-    localStorage.setItem("eventHistory", JSON.stringify(eventHistory));
-  });
-
   // Logs Local History Events to relevant text boxes
   function logEvents(eventHistory) {
     for (let i = 0; i < $(".description").length; i++) {
       $($(".description")[i]).val(eventHistory[i]);
     }
   }
+  logEvents(eventHistory);
   // Colors According to Current Time and Time on Section
   function colorEvents() {
     let textBoxes = $(".description");
@@ -80,5 +48,32 @@ $(function () {
     }
   }
   colorEvents();
-  logEvents(eventHistory);
+
+  // Refeshes every 30 seconds
+  function setTime() {
+    var timerInterval = setInterval(function () {
+      currentTime = dayjs().format('MM/DD/YYYY [@] HH:mm');
+      $("#currentDay").text(currentTime);
+      colorEvents();
+    }, 30000)
+  }
+  // Event Listener: Clear Calendar Button
+  $("#clearCal").on("click", function () {
+    eventHistory = [, , , , , , , ,];
+    localStorage.setItem("eventHistory", JSON.stringify(eventHistory));
+    logEvents(eventHistory);
+  })
+
+  // Event Listener: Save Button
+  $(".saveBtn").on("click", function () {
+    // Logs Hour Number
+    let hourNum = $(this).parent().data("number")
+    // Logs text content
+    let textContent = $(this).parent().children().eq(1).val();
+    eventHistory[hourNum - 9] = textContent;
+    localStorage.setItem("eventHistory", JSON.stringify(eventHistory));
+  });
+
+  setTime();
+
 });
